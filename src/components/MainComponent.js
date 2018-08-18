@@ -8,7 +8,7 @@ import Menu from './MenuComponent';
 import Header from './HeaderComponent';
 import Footer from './FooterComponent';
 import DishDetail from './DishdetailComponent';
-import { addComment } from '../redux/ActionCreators';
+import { addComment, fetchDishes } from '../redux/ActionCreators';
 
 const mapStateToProps = (state) => {
   return {
@@ -20,7 +20,8 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  addComment: (dishId, rating, author, comment) => dispatch(addComment(dishId, rating, author, comment))
+  addComment: (dishId, rating, author, comment) => dispatch(addComment(dishId, rating, author, comment)),
+  fetchDishes: () => { dispatch(fetchDishes()) }
 });
 
 class Main extends Component {
@@ -29,16 +30,24 @@ class Main extends Component {
     
   }
 
+  componentDidMount() {
+    this.props.fetchDishes();
+  }
+
   render() {
     const HomePage = () => {
-      return <Home dish={this.props.dishes.find(item => item.featured)}
+      return <Home dish={this.props.dishes.dishes.find(item => item.featured)}
+        dishesLoading={this.props.dishes.isLoading}
+        dishesErrMess={this.props.dishes.errMessage}
         promotion={this.props.promotions.find(item => item.featured)}
         leader={this.props.leaders.find(item => item.featured)} />;
     };
 
     const DishWithId = ({match}) => {
       return (
-        <DishDetail dish={this.props.dishes.find(item => item.id === parseInt(match.params.dishId, 10) )}
+        <DishDetail dish={this.props.dishes.dishes.find(item => item.id === parseInt(match.params.dishId, 10) )}
+          isLoading={this.props.dishes.isLoading}
+          errMess={this.props.dishes.errMessage}
           comments={this.props.comments.filter(comment => comment.dishId === parseInt(match.params.dishId, 10))}
           addComment={this.props.addComment} />
       );
