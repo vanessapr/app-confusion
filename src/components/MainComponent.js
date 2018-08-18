@@ -47,7 +47,7 @@ class Main extends Component {
         dishesErrMess={this.props.dishes.errMessage}
         promotion={this.props.promotions.promotions.find(item => item.featured)}
         promosLoading={this.props.promotions.isLoading}
-        promosErrMess={this.props.promotions.errMessage}
+        promosErrMess={this.props.promotions.errMess}
         leader={this.props.leaders.find(item => item.featured)} />;
     };
 
